@@ -38,7 +38,7 @@ public class GameTests
         var exception = Assert.Throws<ArgumentException>(() => new Game(homeTeam, "Argentina"));
 
         // Assert
-        Assert.Equal("Home team cannot be null or empty", exception.Message);
+        Assert.Equal("Home team can neither be null nor empty", exception.Message);
     }
 
     [Theory]
@@ -54,7 +54,7 @@ public class GameTests
         var exception = Assert.Throws<ArgumentException>(() => new Game("Brazil", awayTeam));
 
         // Assert
-        Assert.Equal("Away team cannot be null or empty", exception.Message);
+        Assert.Equal("Away team can neither be null nor empty", exception.Message);
     }
 
     [Theory]
