@@ -204,14 +204,14 @@ public class ScoreBoardTests
 
 
     [Fact]
-    public void EndGame_Ok()
+    public void FinishGame_Ok()
     {
         // Arrange
         var scoreBoard = new ScoreBoard(new GameFactory());
         var gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
-        scoreBoard.EndGame(gameId);
+        scoreBoard.FinishGame(gameId);
 
         // Assert
         Assert.Empty(scoreBoard.GetSummary());
@@ -219,7 +219,7 @@ public class ScoreBoardTests
     }
 
     [Fact]
-    public void EndGame_Fails_WhenGameIdIsInvalid()
+    public void FinishGame_Fails_WhenGameIdIsInvalid()
     {
         // Arrange
         var scoreBoard = new ScoreBoard(new GameFactory());
@@ -228,7 +228,7 @@ public class ScoreBoardTests
         var gameId = Guid.NewGuid();
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.EndGame(gameId));
+        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.FinishGame(gameId));
     }
 
 

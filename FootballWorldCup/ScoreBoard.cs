@@ -26,7 +26,7 @@ public class ScoreBoard : IScoreBoard
     /// </summary>
     /// <param name="gameId">Id of the game to end</param>
     /// <exception cref="ArgumentException">When the game does not exists in the scoreboard</exception>
-    public void EndGame(Guid gameId)
+    public void FinishGame(Guid gameId)
     {
         throw new NotImplementedException();
     }

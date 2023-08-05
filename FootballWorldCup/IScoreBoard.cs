@@ -4,7 +4,7 @@
     {
         Guid StartGame(string homeTeam, string awayTeam);
 
-        void EndGame(Guid gameId);
+        void FinishGame(Guid gameId);
         IGame GetGame(Guid gameId);
 
         void UpdateScore(Guid gameId, int homeScore, int awayScore);
