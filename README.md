@@ -7,7 +7,7 @@ This is a simple library in C# to manage information about the games in the Foot
 Simply reference `FootBallWorldCup.dll` and you are good to go!
 
 ## Usage
-To use the library, you can create a new ScoreBoard object and then start, finish, and update the score of games. For example:
+To use the library, you can create a new `ScoreBoard` object and then start, finish, and update the score of games. For example:
 
 ```
 var scoreBoard = new ScoreBoard(new GameFactory());
