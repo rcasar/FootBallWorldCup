@@ -1,7 +1,6 @@
-﻿namespace FootballWorldCup
+﻿namespace FootballWorldCup;
+
+public interface IGameFactory
 {
-    public interface IGameFactory
-    {
-        IGame CreateGame(string homeTeam, string awayTeam);
-    }
+    IGame CreateGame(string homeTeam, string awayTeam);
 }

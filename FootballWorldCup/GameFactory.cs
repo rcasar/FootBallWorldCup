@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace FootballWorldCup;
 
-namespace FootballWorldCup
+public class GameFactory : IGameFactory
 {
-    public class GameFactory : IGameFactory
+    public IGame CreateGame(string homeTeam, string awayTeam)
     {
-        public IGame CreateGame(string homeTeam, string awayTeam)
-        {
-            return new Game(homeTeam, awayTeam);
-        }
+        return new Game(homeTeam, awayTeam);
     }
 }
