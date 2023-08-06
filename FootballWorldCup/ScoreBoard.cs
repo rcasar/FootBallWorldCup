@@ -1,12 +1,17 @@
 ﻿namespace FootballWorldCup;
 public class ScoreBoard : IScoreBoard
 {
+    private readonly Dictionary<Guid, IGame> _games = new();
+    private readonly IGameFactory _gameFactory;
+
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="gameFactory"> </param>
     public ScoreBoard(IGameFactory gameFactory)
     {
+        _gameFactory = gameFactory;
     }
 
     /// <summary>
@@ -18,7 +23,21 @@ public class ScoreBoard : IScoreBoard
     /// <exception cref="ArgumentException">When team name is invalid or is already playing</exception>
     public Guid StartGame(string homeTeam, string awayTeam)
     {
-        throw new NotImplementedException();
+        IGame game = _gameFactory.CreateGame(homeTeam, awayTeam);
+
+        if (CheckIfAlreadyPlaying(homeTeam))
+        {
+            throw new ArgumentException($"{homeTeam} is already playing");
+        }
+        if (CheckIfAlreadyPlaying(awayTeam))
+        {
+            throw new ArgumentException($"{awayTeam} is already playing");
+        }
+
+
+        _games[game.Id] = game;
+        return game.Id;
+
     }
 
     /// <summary>
@@ -28,7 +47,11 @@ public class ScoreBoard : IScoreBoard
     /// <exception cref="ArgumentException">When the game does not exists in the scoreboard</exception>
     public void FinishGame(Guid gameId)
     {
-        throw new NotImplementedException();
+        if (!_games.ContainsKey(gameId))
+        {
+            throw new ArgumentException("Invalid game id");
+        }
+        _games.Remove(gameId);
     }
 
     /// <summary>
@@ -40,9 +63,14 @@ public class ScoreBoard : IScoreBoard
     /// <exception cref="ArgumentException">When the game does not exists in the scoreboard</exception>
     public void UpdateScore(Guid gameId, int homeScore, int awayScore)
     {
-        throw new NotImplementedException();
-    }
+        if (!_games.ContainsKey(gameId))
+        {
+            throw new ArgumentException("Invalid game id");
+        }
 
+        _games[gameId].UpdateScore(homeScore, awayScore);
+
+    }
 
     /// <summary>
     /// Returns a list of games sorted by total score and then by most recent start time
@@ -50,7 +78,7 @@ public class ScoreBoard : IScoreBoard
     /// <returns></returns>
     public IEnumerable<IGame> GetSummary()
     {
-        throw new NotImplementedException();
+        return _games.Values.OrderByDescending(o => o.HomeScore + o.AwayScore).ThenByDescending(m => m.UTCStartTime);
     }
 
     /// <summary>
@@ -61,6 +89,36 @@ public class ScoreBoard : IScoreBoard
     /// <exception cref="ArgumentException">When id is invalid</exception>
     public IGame GetGame(Guid gameId)
     {
-        throw new NotImplementedException();
+        if (!_games.ContainsKey(gameId))
+        {
+            throw new ArgumentException("Invalid game id");
+        }
+        return _games[gameId];
     }
+
+
+    /// <summary>
+    /// Checks if a team is already playing
+    /// </summary>
+    /// <param name="team">Team name</param>
+    /// <returns>True if the team is already playing</returns>
+    private bool CheckIfAlreadyPlaying(string team)
+    {
+        string normalizedTeamName = NormalizeTeamName(team);
+
+        var game = _games.Values.FirstOrDefault(o => NormalizeTeamName(o.HomeTeam) == normalizedTeamName || NormalizeTeamName(o.AwayTeam) == normalizedTeamName);
+        
+        if (game == default)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    /// <summary>
+    /// Returns a normalized team name, used for case insensitive comparison
+    /// </summary>
+    private static string NormalizeTeamName(string team) => team.Trim().ToLower();
+
 }

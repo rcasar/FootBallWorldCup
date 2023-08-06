@@ -17,7 +17,23 @@ public class Game : IGame
     /// <exception cref="ArgumentException">When team names are not valid</exception>
     public Game(string homeTeam, string awayTeam)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrEmpty(homeTeam?.Trim()))
+        {
+            throw new ArgumentException("Home team can neither be null nor empty");
+        }
+
+        if (string.IsNullOrEmpty(awayTeam?.Trim()))
+        {
+            throw new ArgumentException("Away team can neither be null nor empty");
+        }
+
+        if (homeTeam.Trim().ToLower() == awayTeam.Trim().ToLower())
+        {
+            throw new ArgumentException("Home team cannot be the same as away team");
+        }
+
+        HomeTeam = homeTeam;
+        AwayTeam = awayTeam;
     }
 
     /// <summary>
@@ -28,6 +44,16 @@ public class Game : IGame
     /// <exception cref="ArgumentException">When the new scores are not valid</exception>
     public void UpdateScore(int homeScore, int awayScore)
     {
-        throw new NotImplementedException();
+        if (homeScore < HomeScore)
+        {
+            throw new ArgumentException("New home score cannot be lower than current home score");
+        }
+        if (awayScore < AwayScore)
+        {
+            throw new ArgumentException("New away score cannot be lower than current away score");
+        }
+
+        HomeScore = homeScore;
+        AwayScore = awayScore;
     }
 }
