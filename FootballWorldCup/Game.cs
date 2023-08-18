@@ -17,23 +17,25 @@ public class Game : IGame
     /// <exception cref="ArgumentException">When team names are not valid</exception>
     public Game(string homeTeam, string awayTeam)
     {
-        if (string.IsNullOrEmpty(homeTeam?.Trim()))
+        string? trimmedHomeTeam = homeTeam?.Trim();
+        if (string.IsNullOrEmpty(trimmedHomeTeam))
         {
             throw new ArgumentException("Home team can neither be null nor empty");
         }
 
-        if (string.IsNullOrEmpty(awayTeam?.Trim()))
+        string? trimmedAwayTeam = awayTeam?.Trim();
+        if (string.IsNullOrEmpty(trimmedAwayTeam))
         {
             throw new ArgumentException("Away team can neither be null nor empty");
         }
 
-        if (homeTeam.Trim().ToLower() == awayTeam.Trim().ToLower())
+        if (string.Equals(trimmedHomeTeam, trimmedAwayTeam, StringComparison.InvariantCultureIgnoreCase))
         {
             throw new ArgumentException("Home team cannot be the same as away team");
         }
 
-        HomeTeam = homeTeam;
-        AwayTeam = awayTeam;
+        HomeTeam = homeTeam!;
+        AwayTeam = awayTeam!;
     }
 
     /// <summary>
