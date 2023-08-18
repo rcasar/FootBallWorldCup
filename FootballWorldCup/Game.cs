@@ -18,16 +18,9 @@ public class Game : IGame
     public Game(string homeTeam, string awayTeam)
     {
         string? trimmedHomeTeam = homeTeam?.Trim();
-        if (string.IsNullOrEmpty(trimmedHomeTeam))
-        {
-            throw new ArgumentException("Home team can neither be null nor empty");
-        }
-
+        ArgumentNullException.ThrowIfNullOrEmpty(trimmedHomeTeam, nameof(homeTeam));
         string? trimmedAwayTeam = awayTeam?.Trim();
-        if (string.IsNullOrEmpty(trimmedAwayTeam))
-        {
-            throw new ArgumentException("Away team can neither be null nor empty");
-        }
+        ArgumentNullException.ThrowIfNullOrEmpty(trimmedAwayTeam, nameof(awayTeam));
 
         if (string.Equals(trimmedHomeTeam, trimmedAwayTeam, StringComparison.InvariantCultureIgnoreCase))
         {

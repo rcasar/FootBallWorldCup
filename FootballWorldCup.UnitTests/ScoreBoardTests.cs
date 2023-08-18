@@ -75,10 +75,10 @@ public class ScoreBoardTests
         var scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam, "Argentina"));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame(homeTeam, "Argentina"));
 
         // Assert
-        Assert.Equal("Home team can neither be null nor empty", exception.Message);
+        Assert.Contains("homeTeam", exception.Message); 
         Assert.Empty(scoreBoard.GetSummary());
     }
 
@@ -95,10 +95,10 @@ public class ScoreBoardTests
         var scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame("Brazil", awayTeam));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame("Brazil", awayTeam));
 
         // Assert
-        Assert.Equal("Away team can neither be null nor empty", exception.Message);
+        Assert.Contains("awayTeam", exception.Message); 
         Assert.Empty(scoreBoard.GetSummary());
     }
 

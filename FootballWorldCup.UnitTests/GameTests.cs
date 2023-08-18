@@ -35,10 +35,10 @@ public class GameTests
     {
         // Arrange
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Game(homeTeam, "Argentina"));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => new Game(homeTeam, "Argentina"));
 
         // Assert
-        Assert.Equal("Home team can neither be null nor empty", exception.Message);
+        Assert.Contains("homeTeam", exception.Message);
     }
 
     [Theory]
@@ -51,10 +51,10 @@ public class GameTests
     {
         // Arrange
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Game("Brazil", awayTeam));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => new Game("Brazil", awayTeam));
 
         // Assert
-        Assert.Equal("Away team can neither be null nor empty", exception.Message);
+        Assert.Contains("awayTeam", exception.Message);
     }
 
     [Theory]

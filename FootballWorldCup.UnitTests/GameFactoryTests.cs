@@ -29,10 +29,10 @@ public class GameFactoryTests
         var gameFactory = new GameFactory();
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => gameFactory.CreateGame(homeTeam, "Away"));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame(homeTeam, "Away"));
 
         // Assert
-        Assert.Equal("Home team can neither be null nor empty", exception.Message);
+        Assert.Contains("homeTeam", exception.Message);
     }
 
     [Theory]
@@ -47,10 +47,10 @@ public class GameFactoryTests
         var gameFactory = new GameFactory();
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => gameFactory.CreateGame("Home", awayTeam));
+        var exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame("Home", awayTeam));
 
         // Assert
-        Assert.Equal("Away team can neither be null nor empty", exception.Message);
+        Assert.Contains("awayTeam", exception.Message);
     }
 
     [Theory]
