@@ -7,12 +7,12 @@ public class ScoreBoardTests
     public void StartGame_Ok()
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
 
-        var gameId = scoreBoard.StartGame("Brazil", "Argentina");
+        Guid gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
-        var game = scoreBoard.GetGame(gameId);
+        IGame game = scoreBoard.GetGame(gameId);
 
         // Assert
         Assert.NotNull(game);
@@ -22,7 +22,7 @@ public class ScoreBoardTests
         Assert.Equal("Argentina", game.AwayTeam);
         Assert.Equal(0, game.HomeScore);
         Assert.Equal(0, game.AwayScore);
-        Assert.True(game.UTCStartTime < DateTime.UtcNow);        
+        Assert.True(game.UTCStartTime < DateTime.UtcNow);
 
     }
 
@@ -33,11 +33,11 @@ public class ScoreBoardTests
     public void StartGame_Fails_WhenHomeTeamAlreadyPlaying(string homeTeam1, string awayTeam1, string homeTeam2, string awayTeam2)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
         Guid gameId = scoreBoard.StartGame(homeTeam1, awayTeam1);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam2, awayTeam2));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam2, awayTeam2));
 
         // Assert
         Assert.Equal($"{homeTeam2} is already playing", exception.Message);
@@ -52,11 +52,11 @@ public class ScoreBoardTests
     public void StartGame_Fails_WhenAwayTeamAlreadyPlaying(string homeTeam1, string awayTeam1, string homeTeam2, string awayTeam2)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
         scoreBoard.StartGame(homeTeam1, awayTeam1);
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam2, awayTeam2));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam2, awayTeam2));
 
         // Assert
         Assert.Equal($"{awayTeam2} is already playing", exception.Message);
@@ -72,13 +72,13 @@ public class ScoreBoardTests
     public void StartGame_Fails_WhenHomeTeamIsEmpty(string homeTeam)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame(homeTeam, "Argentina"));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame(homeTeam, "Argentina"));
 
         // Assert
-        Assert.Contains("homeTeam", exception.Message); 
+        Assert.Contains("homeTeam", exception.Message);
         Assert.Empty(scoreBoard.GetSummary());
     }
 
@@ -92,13 +92,13 @@ public class ScoreBoardTests
     public void StartGame_Fails_WhenAwayTeamIsEmpty(string awayTeam)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame("Brazil", awayTeam));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => scoreBoard.StartGame("Brazil", awayTeam));
 
         // Assert
-        Assert.Contains("awayTeam", exception.Message); 
+        Assert.Contains("awayTeam", exception.Message);
         Assert.Empty(scoreBoard.GetSummary());
     }
 
@@ -118,10 +118,10 @@ public class ScoreBoardTests
     public void StartGame_Fails_WhenHomeTeamIsSameAsAwayTeam(string homeTeam, string awayTeam)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam, awayTeam));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.StartGame(homeTeam, awayTeam));
 
         // Assert
         Assert.Equal("Home team cannot be the same as away team", exception.Message);
@@ -136,8 +136,8 @@ public class ScoreBoardTests
     public void UpdateScore_Ok(int homeScore, int awayScore)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
-        var gameId = scoreBoard.StartGame("Brazil", "Argentina");
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
+        Guid gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
         scoreBoard.UpdateScore(gameId, homeScore, awayScore);
@@ -154,11 +154,11 @@ public class ScoreBoardTests
     public void UpdateScore_Fails_WhenGameIdIsInvalid()
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
-        var gameId = Guid.NewGuid();
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
+        Guid gameId = Guid.NewGuid();
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, 1, 1));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, 1, 1));
 
         // Assert   
         Assert.Equal("Invalid game id", exception.Message);
@@ -168,16 +168,16 @@ public class ScoreBoardTests
     [Theory]
     [InlineData(1, 0)]
     [InlineData(2, 1)]
-    [InlineData(3, -1)]   
+    [InlineData(3, -1)]
     public void UpdateScore_Fails_WhenHomeScoreIsInvalid(int originalHomeScore, int updatedHomeScore)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
-        var gameId = scoreBoard.StartGame("Brazil", "Argentina");
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
+        Guid gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
         scoreBoard.UpdateScore(gameId, originalHomeScore, 0);
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, updatedHomeScore, 0));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, updatedHomeScore, 0));
 
         // Assert
         Assert.Equal("New home score cannot be lower than current home score", exception.Message);
@@ -190,12 +190,12 @@ public class ScoreBoardTests
     public void UpdateScore_Fails_WhenAwayScoreIsInvalid(int originalAwayScore, int updatedAwayScore)
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
-        var gameId = scoreBoard.StartGame("Brazil", "Argentina");
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
+        Guid gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
         scoreBoard.UpdateScore(gameId, 0, originalAwayScore);
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, 0, updatedAwayScore));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.UpdateScore(gameId, 0, updatedAwayScore));
 
         // Assert
         Assert.Equal("New away score cannot be lower than current away score", exception.Message);
@@ -207,36 +207,36 @@ public class ScoreBoardTests
     public void FinishGame_Ok()
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
-        var gameId = scoreBoard.StartGame("Brazil", "Argentina");
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
+        Guid gameId = scoreBoard.StartGame("Brazil", "Argentina");
 
         // Act
         scoreBoard.FinishGame(gameId);
 
         // Assert
         Assert.Empty(scoreBoard.GetSummary());
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.GetGame(gameId));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.GetGame(gameId));
     }
 
     [Fact]
     public void FinishGame_Fails_WhenGameIdIsInvalid()
     {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
 
         // Act
-        var gameId = Guid.NewGuid();
+        Guid gameId = Guid.NewGuid();
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() => scoreBoard.FinishGame(gameId));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => scoreBoard.FinishGame(gameId));
     }
 
 
     [Fact]
     public void GetSummary_Ok()
-    { 
+    {
         // Arrange
-        var scoreBoard = new ScoreBoard(new GameFactory());
+        IScoreBoard scoreBoard = new ScoreBoard(new GameFactory());
         /*
             a. Mexico - Canada: 0 - 5
             b. Spain - Brazil: 10 – 2
@@ -245,11 +245,11 @@ public class ScoreBoardTests
             e. Argentina - Australia: 3 - 1
         */
 
-        var gameId1 = scoreBoard.StartGame("Mexico", "Canada");
-        var gameId2 = scoreBoard.StartGame("Spain", "Brazil");
-        var gameId3 = scoreBoard.StartGame("Germany", "France");
-        var gameId4 = scoreBoard.StartGame("Uruguay", "Italy");
-        var gameId5 = scoreBoard.StartGame("Argentina", "Australia");
+        Guid gameId1 = scoreBoard.StartGame("Mexico", "Canada");
+        Guid gameId2 = scoreBoard.StartGame("Spain", "Brazil");
+        Guid gameId3 = scoreBoard.StartGame("Germany", "France");
+        Guid gameId4 = scoreBoard.StartGame("Uruguay", "Italy");
+        Guid gameId5 = scoreBoard.StartGame("Argentina", "Australia");
 
         scoreBoard.UpdateScore(gameId1, 0, 5);
         scoreBoard.UpdateScore(gameId2, 10, 2);
@@ -259,7 +259,7 @@ public class ScoreBoardTests
 
 
         // Act
-        var summary = scoreBoard.GetSummary();
+        IEnumerable<IGame> summary = scoreBoard.GetSummary();
 
         /*
           The summary would provide with the following information:

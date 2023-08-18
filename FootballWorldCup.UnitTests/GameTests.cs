@@ -6,15 +6,15 @@ public class GameTests
     public void CreateNewGame_Ok()
     {
         // Arrange
-        var game = new Game("Brazil", "Argentina");
+        IGame game = new Game("Brazil", "Argentina");
 
         // Act
-        var homeTeam = game.HomeTeam;
-        var awayTeam = game.AwayTeam;
-        var homeScore = game.HomeScore;
-        var awayScore = game.AwayScore;
-        var id = game.Id;
-        var utcStartTime = game.UTCStartTime;
+        string homeTeam = game.HomeTeam;
+        string awayTeam = game.AwayTeam;
+        int homeScore = game.HomeScore;
+        int awayScore = game.AwayScore;
+        Guid id = game.Id;
+        DateTime utcStartTime = game.UTCStartTime;
 
         // Assert
         Assert.Equal("Brazil", homeTeam);
@@ -35,7 +35,7 @@ public class GameTests
     {
         // Arrange
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => new Game(homeTeam, "Argentina"));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => new Game(homeTeam, "Argentina"));
 
         // Assert
         Assert.Contains("homeTeam", exception.Message);
@@ -51,7 +51,7 @@ public class GameTests
     {
         // Arrange
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => new Game("Brazil", awayTeam));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => new Game("Brazil", awayTeam));
 
         // Assert
         Assert.Contains("awayTeam", exception.Message);
@@ -74,7 +74,7 @@ public class GameTests
     {
         // Arrange
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => new Game(homeTeam, awayTeam));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => new Game(homeTeam, awayTeam));
 
         // Assert
         Assert.Equal("Home team cannot be the same as away team", exception.Message);
@@ -85,7 +85,7 @@ public class GameTests
     public void UpdateScore_Ok()
     {
         // Arrange
-        var game = new Game("Brazil", "Argentina");
+        IGame game = new Game("Brazil", "Argentina");
 
         // Act
         game.UpdateScore(1, 0);
@@ -99,10 +99,10 @@ public class GameTests
     public void UpdateScore_Fails_WhenHomeScoreIsInvalid()
     {
         // Arrange
-        var game = new Game("Brazil", "Argentina");
+        IGame game = new Game("Brazil", "Argentina");
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => game.UpdateScore(-1, 0));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => game.UpdateScore(-1, 0));
 
         // Assert
         Assert.Equal("New home score cannot be lower than current home score", exception.Message);
@@ -112,10 +112,10 @@ public class GameTests
     public void UpdateScore_Fails_WhenAwayScoreIsInvalid()
     {
         // Arrange
-        var game = new Game("Brazil", "Argentina");
+        IGame game = new Game("Brazil", "Argentina");
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => game.UpdateScore(0, -1));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => game.UpdateScore(0, -1));
 
         // Assert
         Assert.Equal("New away score cannot be lower than current away score", exception.Message);

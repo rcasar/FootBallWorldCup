@@ -106,7 +106,7 @@ public class ScoreBoard : IScoreBoard
     {
         string normalizedTeamName = NormalizeTeamName(team);
 
-        var game = _games.Values.FirstOrDefault(o => NormalizeTeamName(o.HomeTeam) == normalizedTeamName || NormalizeTeamName(o.AwayTeam) == normalizedTeamName);
+        IGame? game = _games.Values.FirstOrDefault(o => NormalizeTeamName(o.HomeTeam) == normalizedTeamName || NormalizeTeamName(o.AwayTeam) == normalizedTeamName);
         
         if (game == default)
         {

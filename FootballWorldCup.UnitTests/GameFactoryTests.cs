@@ -6,7 +6,7 @@ public class GameFactoryTests
     public void CreateGame_ShouldReturnGame()
     {
         // Arrange
-        var gameFactory = new GameFactory();
+        IGameFactory gameFactory = new GameFactory();
 
         // Act
         IGame game = gameFactory.CreateGame("Home", "Away");
@@ -26,10 +26,10 @@ public class GameFactoryTests
     public void CreateGame_ShouldThrowArgumentException_WhenHomeTeamIsInvalid(string homeTeam)
     {
         // Arrange
-        var gameFactory = new GameFactory();
+        IGameFactory gameFactory = new GameFactory();
 
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame(homeTeam, "Away"));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame(homeTeam, "Away"));
 
         // Assert
         Assert.Contains("homeTeam", exception.Message);
@@ -44,10 +44,10 @@ public class GameFactoryTests
     public void CreateGame_ShouldThrowArgumentException_WhenAwayTeamIsInvalid(string awayTeam)
     {
         // Arrange
-        var gameFactory = new GameFactory();
+        IGameFactory gameFactory = new GameFactory();
 
         // Act
-        var exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame("Home", awayTeam));
+        ArgumentException exception = Assert.ThrowsAny<ArgumentException>(() => gameFactory.CreateGame("Home", awayTeam));
 
         // Assert
         Assert.Contains("awayTeam", exception.Message);
@@ -69,10 +69,10 @@ public class GameFactoryTests
     public void CreateGame_ShouldThrowArgumentException_WhenHomeTeamIsSameAsAwayTeam(string homeTeam, string awayTeam)
     {
         // Arrange
-        var gameFactory = new GameFactory();
+        IGameFactory gameFactory = new GameFactory();
 
         // Act
-        var exception = Assert.Throws<ArgumentException>(() => gameFactory.CreateGame(homeTeam, awayTeam));
+        ArgumentException exception = Assert.Throws<ArgumentException>(() => gameFactory.CreateGame(homeTeam, awayTeam));
 
         // Assert
         Assert.Equal("Home team cannot be the same as away team", exception.Message);
