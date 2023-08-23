@@ -23,8 +23,6 @@ public class ScoreBoard : IScoreBoard
     /// <exception cref="ArgumentException">When team name is invalid or is already playing</exception>
     public Guid StartGame(string homeTeam, string awayTeam)
     {
-        IGame game = _gameFactory.CreateGame(homeTeam, awayTeam);
-
         if (CheckIfAlreadyPlaying(homeTeam))
         {
             throw new ArgumentException($"{homeTeam} is already playing");
@@ -33,11 +31,11 @@ public class ScoreBoard : IScoreBoard
         {
             throw new ArgumentException($"{awayTeam} is already playing");
         }
-
+        
+        IGame game = _gameFactory.CreateGame(homeTeam, awayTeam);
 
         _games[game.Id] = game;
         return game.Id;
-
     }
 
     /// <summary>
@@ -104,21 +102,21 @@ public class ScoreBoard : IScoreBoard
     /// <returns>True if the team is already playing</returns>
     private bool CheckIfAlreadyPlaying(string team)
     {
-        string normalizedTeamName = NormalizeTeamName(team);
+        string? normalizedTeamName = NormalizeTeamName(team);
 
         IGame? game = _games.Values.FirstOrDefault(o => NormalizeTeamName(o.HomeTeam) == normalizedTeamName || NormalizeTeamName(o.AwayTeam) == normalizedTeamName);
-        
+
         if (game == default)
         {
             return false;
         }
-        
+
         return true;
     }
 
     /// <summary>
     /// Returns a normalized team name, used for case insensitive comparison
     /// </summary>
-    private static string NormalizeTeamName(string team) => team.Trim().ToLower();
+    private static string? NormalizeTeamName(string? team) => team?.Trim().ToLower();
 
 }
